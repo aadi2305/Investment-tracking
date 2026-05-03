@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Goal": {
+      "title": "Goal",
+      "description": "Financial goal representing a target amount and deadline.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "targetAmount": { "type": "number" },
+        "deadline": { "type": "string", "description": "ISO date string" },
+        "monthlyInvestment": { "type": "number" },
+        "icon": { "type": "string" },
+        "createdAt": { "type": "string", "description": "ISO date string" }
+      },
+      "required": ["name", "targetAmount", "createdAt"]
+    },
+    "Fund": {
+      "title": "Fund",
+      "description": "Investment fund or asset entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["Mutual Fund", "Stock", "Fixed Deposit", "EPF / VPF", "PPF", "Cash / Bank", "Other"] },
+        "currentNAV": { "type": "number" },
+        "lastUpdated": { "type": "string", "description": "ISO date string" },
+        "isCustomBalance": { "type": "boolean" }
+      },
+      "required": ["name", "type", "currentNAV", "lastUpdated"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A single investment transaction entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "units": { "type": "number" },
+        "date": { "type": "string", "description": "ISO date string" },
+        "fundId": { "type": "string" },
+        "goalId": { "type": "string" }
+      },
+      "required": ["amount", "date", "fundId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/goals/{goalId}": {
+      "schema": "Goal",
+      "description": "User specific financial goals"
+    },
+    "/users/{userId}/funds/{fundId}": {
+      "schema": "Fund",
+      "description": "User specific investment assets"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "History of investments linked to funds and goals"
+    }
+  }
+}

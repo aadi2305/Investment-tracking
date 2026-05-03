@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Goal Validation
+    function isValidGoal(data) {
+      return data.keys().hasAll(['name', 'targetAmount', 'createdAt']) &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+        data.targetAmount is number && data.targetAmount >= 0 &&
+        data.createdAt is string && // ISO Check simplified
+        (data.get('deadline', null) == null || data.deadline is string) &&
+        (data.get('monthlyInvestment', null) == null || data.monthlyInvestment is number) &&
+        (data.get('icon', null) == null || data.icon is string);
+    }
+
+    // Fund Validation
+    function isValidFund(data) {
+      return data.keys().hasAll(['name', 'type', 'currentNAV', 'lastUpdated']) &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+        data.type is string && data.type.size() <= 50 &&
+        data.currentNAV is number && data.currentNAV >= 0 &&
+        data.lastUpdated is string &&
+        (data.get('isCustomBalance', null) == null || data.isCustomBalance is bool) &&
+        (data.get('schemeCode', null) == null || data.schemeCode is string);
+    }
+
+    // Transaction Validation
+    function isValidTransaction(data, userId) {
+      return data.keys().hasAll(['amount', 'date', 'fundId']) &&
+        data.amount is number && data.amount != 0 &&
+        data.date is string &&
+        data.fundId is string &&
+        exists(/databases/$(database)/documents/users/$(userId)/funds/$(data.fundId)) &&
+        (data.get('goalId', null) == null || (data.goalId is string && exists(/databases/$(database)/documents/users/$(userId)/goals/$(data.goalId)))) &&
+        (data.get('units', null) == null || data.units is number);
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      
+      match /goals/{goalId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(goalId);
+        allow create: if isOwner(userId) && isValidId(goalId) && isValidGoal(incoming());
+        allow update: if isOwner(userId) && isValidId(goalId) && isValidGoal(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'targetAmount', 'deadline', 'monthlyInvestment', 'icon']) &&
+          incoming().createdAt == existing().createdAt
+        );
+        allow delete: if isOwner(userId);
+      }
+
+      match /funds/{fundId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(fundId);
+        allow create: if isOwner(userId) && isValidId(fundId) && isValidFund(incoming());
+        allow update: if isOwner(userId) && isValidId(fundId) && isValidFund(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'type', 'currentNAV', 'lastUpdated', 'isCustomBalance'])
+        );
+        allow delete: if isOwner(userId);
+      }
+
+      match /transactions/{transactionId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(transactionId);
+        allow create: if isOwner(userId) && isValidId(transactionId) && isValidTransaction(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(transactionId) && isValidTransaction(incoming(), userId) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['amount', 'date', 'fundId', 'goalId', 'units'])
+        );
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}
