@@ -127,12 +127,6 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
           >
             Create Your First Goal
           </button>
-          <button 
-            onClick={() => seedSampleData()}
-            className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold rounded-2xl cursor-pointer hover:bg-gray-50 transition text-xs uppercase tracking-widest"
-          >
-            Explore Demo Portfolio
-          </button>
         </div>
       </div>
     );
@@ -181,11 +175,10 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
       {/* Quick Actions */}
       <div className="bento-card col-span-1 md:row-span-1">
         <span className="pill mb-3 w-fit">Quick Actions</span>
-        <div className="grid grid-cols-2 gap-2 mt-2">
-          <button onClick={() => onNavigate("add")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">NEW TX</button>
-          <button onClick={() => onNavigate("goals")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">GOALS</button>
-          <button onClick={() => onNavigate("funds")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">VALUATION</button>
-          <button onClick={() => seedSampleData()} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold bg-gray-50 hover:bg-gray-100 transition-colors">RESET DATA</button>
+        <div className="grid grid-cols-1 gap-2 mt-2">
+          <button onClick={() => onNavigate("add")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">NEW TRANSACTION</button>
+          <button onClick={() => onNavigate("goals")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">MANAGE GOALS</button>
+          <button onClick={() => onNavigate("funds")} className="p-2 border border-gray-100 rounded-lg text-[10px] font-bold hover:bg-gray-50 transition-colors">ASSET VALUATION</button>
         </div>
       </div>
 
