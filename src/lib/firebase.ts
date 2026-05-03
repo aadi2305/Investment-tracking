@@ -19,24 +19,30 @@ const getSafeConfig = () => {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || firebaseConfigReal.measurementId || undefined
   };
   
-  if (!c.apiKey || !c.projectId) {
-    console.error("Firebase config is missing API Key or Project ID. Please check your environment variables or firebase-applet-config.json");
-  }
+  const missing = [];
+  if (!c.apiKey) missing.push("VITE_FIREBASE_API_KEY");
+  if (!c.projectId) missing.push("VITE_FIREBASE_PROJECT_ID");
+  if (!c.appId) missing.push("VITE_FIREBASE_APP_ID");
   
-  return c;
+  return { config: c, missing };
 };
 
-const config = getSafeConfig();
-const app = initializeApp(config);
+const { config, missing } = getSafeConfig();
+export const firebaseConfigError = missing.length > 0 ? missing : null;
+
+// Only initialize if we have the bare minimums to avoid crashing the whole app
+const app = firebaseConfigError ? null : initializeApp(config);
 
 // Using the project ID and database ID from the config
 const dbId = import.meta.env.VITE_FIREBASE_DATABASE_ID || firebaseConfigReal.firestoreDatabaseId || undefined;
-export const db = getFirestore(app, dbId);
-export const auth = getAuth(app);
+
+export const db = app ? getFirestore(app, dbId) : null;
+export const auth = app ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 
 // Connection check as required
 async function testConnection() {
+  if (!db || !auth) return;
   try {
     // Only test if we have a user, otherwise it will fail due to rules
     if (auth.currentUser) {
@@ -49,6 +55,14 @@ async function testConnection() {
   }
 }
 
+testConnection();
+
 // Initializing sign in helper
-export const signIn = () => signInWithPopup(auth, googleProvider);
-export const logOut = () => signOut(auth);
+export const signIn = () => {
+  if (!auth) throw new Error("Firebase Auth not initialized");
+  return signInWithPopup(auth, googleProvider);
+};
+export const logOut = () => {
+  if (!auth) throw new Error("Firebase Auth not initialized");
+  return signOut(auth);
+};

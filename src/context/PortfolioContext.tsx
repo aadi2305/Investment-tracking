@@ -56,6 +56,10 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
@@ -67,7 +71,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   }, []);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !db) {
       setGoals([]);
       setFunds([]);
       setTransactions([]);
