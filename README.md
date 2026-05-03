@@ -10,37 +10,40 @@ Vault.ai is a privacy-first, beautiful financial dashboard for tracking mutual f
 - **Bento Grid Interface**: A highly responsive, clean UI inspired by modern design trends.
 - **Secure**: Authentication and data storage powered by Firebase.
 
-## 🚀 Simple GitHub Pages Deployment
+## 🚀 Automated GitHub Pages Deployment
 
-Since the automated GitHub Action had permission issues, we've switched to a simpler method. Follow these steps:
+This app is configured to deploy automatically to GitHub Pages whenever you push code to the `main` branch.
 
-### 1. Configure GitHub Pages
-1. Go to your repository on GitHub.com.
-2. Click **Settings** (top tab).
-3. Click **Pages** (left sidebar).
-4. Under **Build and deployment** > **Source**, make sure it is set to **"Deploy from a branch"**.
+### 1. Fix "Insufficient Permissions" (Crucial)
+GitHub Actions often lack the permission to deploy by default. To fix this:
+1. Go to your repo **Settings** > **Actions** > **General**.
+2. Scroll to the bottom to **Workflow permissions**.
+3. Select **"Read and write permissions"**.
+4. Check **"Allow GitHub Actions to create and approve pull requests"** (optional but recommended).
+5. Click **Save**.
 
-### 2. Deploy from your computer
-Once you have the code on your local machine:
-```bash
-# 1. Install dependencies
-npm install
+### 2. Configure Pages Source
+1. Go to **Settings** > **Pages**.
+2. Under **Build and deployment** > **Source**, change "Deploy from a branch" to **"GitHub Actions"**.
 
-# 2. Deploy (this builds and pushes to the gh-pages branch)
-npm run deploy
-```
+### 3. Add Your Environment Variables
+To ensure the app works after deployment, you must add your Firebase credentials to GitHub:
+1. Go to **Settings** > **Secrets and variables** > **Actions** > **Variables** (Tab).
+2. Click **New repository variable** for each of these:
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+   - `VITE_FIREBASE_DATABASE_ID`
 
-### 3. Final Settings
-1. After running the command, go back to **Settings > Pages**.
-2. Select the **`gh-pages`** branch (it will be created automatically) and folder **`/(root)`**.
-3. Click **Save**.
-
-### 4. Update Firebase Settings
+### 4. Update Firebase Authorized Domains
 1. Go to the [Firebase Console](https://console.firebase.google.com/).
 2. Go to **Authentication** > **Settings** > **Authorized Domains**.
-3. Add your GitHub Pages URL (e.g., `yourusername.github.io`).
+3. Add your GitHub Pages domain (e.g., `username.github.io`).
 
-## 🛠 Features & Setup
+## 🛠 Manual Local Setup
 
 If you want to host your own instance, copy `.env.example` to `.env` and fill in your Firebase credentials. 
 
