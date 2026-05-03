@@ -33,13 +33,13 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
-          VITE_FIREBASE_DATABASE_ID: ${{ vars.VITE_FIREBASE_DATABASE_ID }}
+          VITE_FIREBASE_API_KEY: AIzaSyAboOtdXwLI4BPsYvHnvV06Leq4beF0j4g
+          VITE_FIREBASE_AUTH_DOMAIN: gen-lang-client-0124024451.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: gen-lang-client-0124024451
+          VITE_FIREBASE_STORAGE_BUCKET: gen-lang-client-0124024451.firebasestorage.app
+          VITE_FIREBASE_MESSAGING_SENDER_ID: "824591659352"
+          VITE_FIREBASE_APP_ID: "1:824591659352:web:8999fd35650b9278c2f52d"
+          VITE_FIREBASE_DATABASE_ID: ai-studio-8aa9cbb4-c6bc-4271-bae4-fe682de7fdb4
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
