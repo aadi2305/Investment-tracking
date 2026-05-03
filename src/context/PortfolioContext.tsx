@@ -67,7 +67,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
         setDataLoading(true);
       }
     });
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {

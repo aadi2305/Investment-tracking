@@ -20,9 +20,9 @@ const getSafeConfig = () => {
   };
   
   const missing = [];
-  if (!c.apiKey) missing.push("VITE_FIREBASE_API_KEY");
-  if (!c.projectId) missing.push("VITE_FIREBASE_PROJECT_ID");
-  if (!c.appId) missing.push("VITE_FIREBASE_APP_ID");
+  if (!c.apiKey) missing.push("VITE_FIREBASE_API_KEY / apiKey");
+  if (!c.projectId) missing.push("VITE_FIREBASE_PROJECT_ID / projectId");
+  if (!c.appId) missing.push("VITE_FIREBASE_APP_ID / appId");
   
   return { config: c, missing };
 };
@@ -59,10 +59,10 @@ testConnection();
 
 // Initializing sign in helper
 export const signIn = () => {
-  if (!auth) throw new Error("Firebase Auth not initialized");
+  if (!auth) throw new Error("Firebase Auth not initialized. Check your configuration.");
   return signInWithPopup(auth, googleProvider);
 };
 export const logOut = () => {
-  if (!auth) throw new Error("Firebase Auth not initialized");
+  if (!auth) throw new Error("Firebase Auth not initialized. Check your configuration.");
   return signOut(auth);
 };
