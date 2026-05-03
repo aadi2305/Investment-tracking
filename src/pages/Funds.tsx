@@ -13,7 +13,7 @@ import { calculateXIRR } from "../utils/finance";
 import { cn } from "../lib/utils";
 
 export const Funds = () => {
-  const { funds, addFund, updateFund, deleteFund, transactions, refreshNAVs } = usePortfolio();
+  const { funds, addFund, updateFund, deleteFund, transactions, refreshNAVs, dataLoading } = usePortfolio();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFund, setEditingFund] = useState<any>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -33,6 +33,14 @@ export const Funds = () => {
     await refreshNAVs();
     setIsRefreshing(false);
   };
+
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (editingFund) {

@@ -25,6 +25,7 @@ import { mfService } from "../services/mfService";
 interface PortfolioContextType {
   user: User | null;
   loading: boolean;
+  dataLoading: boolean;
   goals: Goal[];
   funds: Fund[];
   transactions: Transaction[];
@@ -49,6 +50,7 @@ const PortfolioContext = createContext<PortfolioContextType | undefined>(undefin
 export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [funds, setFunds] = useState<Fund[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -57,6 +59,9 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
+      if (u) {
+        setDataLoading(true);
+      }
     });
     return unsubscribe;
   }, []);
@@ -66,13 +71,26 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
       setGoals([]);
       setFunds([]);
       setTransactions([]);
+      setDataLoading(false);
       return;
     }
+
+    let goalsReady = false;
+    let fundsReady = false;
+    let txReady = false;
+
+    const checkReady = () => {
+      if (goalsReady && fundsReady && txReady) {
+        setDataLoading(false);
+      }
+    };
 
     const goalsPath = `users/${user.uid}/goals`;
     const unsubGoals = onSnapshot(query(collection(db, goalsPath), orderBy("createdAt", "desc")), 
       (snapshot) => {
         setGoals(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Goal)));
+        goalsReady = true;
+        checkReady();
       }, 
       (error) => handleFirestoreError(error, OperationType.GET, goalsPath)
     );
@@ -81,6 +99,8 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     const unsubFunds = onSnapshot(collection(db, fundsPath), 
       (snapshot) => {
         setFunds(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Fund)));
+        fundsReady = true;
+        checkReady();
       }, 
       (error) => handleFirestoreError(error, OperationType.GET, fundsPath)
     );
@@ -89,6 +109,8 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     const unsubTx = onSnapshot(query(collection(db, txPath), orderBy("date", "desc")), 
       (snapshot) => {
         setTransactions(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Transaction)));
+        txReady = true;
+        checkReady();
       }, 
       (error) => handleFirestoreError(error, OperationType.GET, txPath)
     );
@@ -355,7 +377,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   return (
     <PortfolioContext.Provider value={{
-      user, loading, goals, funds, transactions,
+      user, loading, dataLoading, goals, funds, transactions,
       addGoal, updateGoal, deleteGoal,
       addFund, updateFund, deleteFund,
       addTransaction, updateTransaction, splitTransaction, deleteTransaction,

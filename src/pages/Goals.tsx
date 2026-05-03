@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 export const Goals = () => {
-  const { goals, addGoal, updateGoal, deleteGoal, transactions } = usePortfolio();
+  const { goals, addGoal, updateGoal, deleteGoal, transactions, dataLoading } = usePortfolio();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<any>(null);
   const [goalToDelete, setGoalToDelete] = useState<any>(null);
@@ -75,6 +75,14 @@ export const Goals = () => {
   }, [calcTarget, calcMonthly, currentInvested]);
 
   const estimatedMonths = projectionData.length > 0 ? projectionData[projectionData.length - 1].month : 0;
+
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

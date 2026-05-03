@@ -16,7 +16,7 @@ import { cn } from "../lib/utils";
 import { Transaction } from "../types";
 
 export const History = () => {
-  const { transactions, goals, funds, deleteTransaction, updateTransaction, splitTransaction } = usePortfolio();
+  const { transactions, goals, funds, deleteTransaction, updateTransaction, splitTransaction, dataLoading } = usePortfolio();
   const [filter, setFilter] = useState({ fund: "", goal: "", search: "" });
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [splittingTx, setSplittingTx] = useState<Transaction | null>(null);
@@ -33,6 +33,14 @@ export const History = () => {
            (!filter.fund || t.fundId === filter.fund) && 
            (!filter.goal || t.goalId === filter.goal);
   }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -415,9 +423,17 @@ const SplitModal = ({ transaction, goals, onClose, onSplit }: SplitModalProps) =
 };
 
 export const AddInvestment = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const { funds, goals, addTransaction } = usePortfolio();
+  const { funds, goals, addTransaction, dataLoading } = usePortfolio();
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState<"buy" | "sell">("buy");
+
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
   
   // Auto-NAV states
   const [amount, setAmount] = useState<number>(0);

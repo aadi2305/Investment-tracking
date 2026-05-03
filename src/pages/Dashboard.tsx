@@ -14,7 +14,7 @@ import { cn } from "../lib/utils";
 const COLORS = ["#2563eb", "#22c55e", "#f59e0b", "#ec4899", "#8b5cf6", "#06b6d4"];
 
 export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void }) => {
-  const { goals, funds, transactions, seedSampleData } = usePortfolio();
+  const { goals, funds, transactions, seedSampleData, dataLoading } = usePortfolio();
 
   const portfolioWithMetrics = funds.map(fund => {
     const fundTxs = transactions.filter(t => t.fundId === fund.id);
@@ -97,6 +97,18 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
     value: g.current
   })).filter(g => g.value > 0);
 
+  // Show a loading skeleton/state while fetching data from DB
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest animate-pulse">Syncing Vault...</p>
+        </div>
+      </div>
+    );
+  }
+
   // If no transactions, show a get started screen
   if (transactions.length === 0 && goals.length === 0 && funds.length === 0) {
     return (
@@ -119,7 +131,7 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
             onClick={() => seedSampleData()}
             className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold rounded-2xl cursor-pointer hover:bg-gray-50 transition text-xs uppercase tracking-widest"
           >
-            Import My Portfolio
+            Explore Demo Portfolio
           </button>
         </div>
       </div>
