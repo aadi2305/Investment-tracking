@@ -104,14 +104,14 @@ export const History = () => {
                 key={t.id} 
                 className="group bento-card !p-3 md:!p-4 bg-white border border-gray-100 hover:border-gray-200 transition-all flex items-center justify-between"
               >
-                <div className="flex items-center gap-3 md:gap-5">
+                <div className="flex items-start gap-3 md:gap-5">
                   <div className={cn(
-                    "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105",
+                    "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 mt-0.5",
                     isBuy ? "bg-accent-green/10 text-accent-green" : "bg-red-50 text-red-500"
                   )}>
                     {isBuy ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-baseline gap-2">
                        <h3 className="text-sm md:text-base font-bold tracking-tight text-gray-900 truncate max-w-[140px] md:max-w-xs">{fund?.name || "Deleted Asset"}</h3>
                        <span className={cn(
@@ -137,8 +137,8 @@ export const History = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 md:gap-4 lg:gap-8">
-                  <div className="text-right">
+                <div className="flex items-start gap-2 md:gap-4 lg:gap-8">
+                  <div className="text-left md:text-right">
                     <div className={cn("text-base md:text-lg font-bold tracking-tighter", isBuy ? "text-gray-900" : "text-red-500")}>
                       {isBuy ? "+" : "-"}₹{Math.abs(t.amount).toLocaleString()}
                     </div>

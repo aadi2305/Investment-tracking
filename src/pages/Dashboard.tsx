@@ -222,40 +222,40 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
          </div>
        </div>
  
-       {/* Asset Allocation */}
-       <div className="bento-card col-span-1 md:col-span-2 md:row-span-2">
-         <span className="pill mb-4 w-fit">Asset Allocation</span>
-         <div className="flex-1 flex flex-col justify-center space-y-6">
-           {portfolioWithMetrics.slice(0, 4).map((fund, idx) => (
-             <div key={fund.id} className="flex items-center gap-4">
-               <div className="w-4 h-4 rounded-md" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></div>
-               <div className="flex-1">
-                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
-                   <span className="truncate">{fund.name}</span>
-                   <span className="text-black">{((fund.current / totalValue) * 100).toFixed(0)}%</span>
-                 </div>
-                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                   <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(fund.current / totalValue) * 100}%` }}
-                    className="h-full" 
-                    style={{ backgroundColor: COLORS[idx % COLORS.length] }} 
-                   />
-                 </div>
-               </div>
-               <div className="text-right min-w-[80px]">
-                 <div className="text-[11px] font-bold">₹{fund.current.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                 <div className="text-[10px] text-accent-green font-bold">+{fund.percGain.toFixed(1)}%</div>
-               </div>
-             </div>
-           ))}
-           {funds.length === 0 && <div className="text-gray-300 text-xs italic text-center">No assets found.</div>}
-         </div>
-       </div>
+        {/* Asset Allocation */}
+        <div className="bento-card col-span-1 md:col-span-2 md:row-span-2">
+          <span className="pill mb-4 w-fit">Asset Allocation</span>
+          <div className="flex-1 flex flex-col justify-center space-y-5">
+            {portfolioWithMetrics.slice(0, 4).map((fund, idx) => (
+              <div key={fund.id} className="flex items-center gap-2 md:gap-4">
+                <div className="w-3 h-3 md:w-4 md:h-4 shrink-0 rounded-md" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between text-[10px] md:text-[11px] font-bold uppercase tracking-wider mb-1">
+                    <span className="truncate pr-2">{fund.name}</span>
+                    <span className="text-black shrink-0">{((fund.current / totalValue) * 100).toFixed(0)}%</span>
+                  </div>
+                  <div className="h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                     initial={{ width: 0 }}
+                     animate={{ width: `${(fund.current / totalValue) * 100}%` }}
+                     className="h-full" 
+                     style={{ backgroundColor: COLORS[idx % COLORS.length] }} 
+                    />
+                  </div>
+                </div>
+                <div className="text-right shrink-0 min-w-[70px] md:min-w-[80px]">
+                  <div className="text-[10px] md:text-[11px] font-bold">₹{fund.current.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  <div className="text-[9px] md:text-[10px] text-accent-green font-bold">+{fund.percGain.toFixed(1)}%</div>
+                </div>
+              </div>
+            ))}
+            {funds.length === 0 && <div className="text-gray-300 text-xs italic text-center">No assets found.</div>}
+          </div>
+        </div>
  
        {/* Footer Metrics */}
       <div className="bento-card col-span-1 md:col-span-3 md:row-span-1">
-          <div className="flex flex-col md:flex-row justify-between items-center h-full text-sm font-medium px-4 gap-6 md:gap-0 py-4 md:py-0">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center h-full text-sm font-medium px-4 gap-6 md:gap-0 py-4 md:py-0">
           <div className="text-left w-full">
             <div className="text-gray-400 text-[9px] font-bold uppercase tracking-widest mb-1">Total Assets</div>
             <div className="text-xl md:text-2xl font-bold tracking-tighter">₹{totalValue.toLocaleString()}</div>
