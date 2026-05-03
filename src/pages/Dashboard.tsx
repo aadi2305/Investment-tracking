@@ -195,7 +195,7 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
           <span className="pill">Active Goals</span>
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{goals.length} Ongoing</span>
         </div>
-        <div className="space-y-6 overflow-y-auto max-h-[200px] pr-2">
+        <div className="space-y-6 overflow-y-auto max-h-[300px] pr-2">
           {goalData.map(goal => (
             <div key={goal.id} className="space-y-2">
               <div className="flex justify-between text-sm items-baseline">
@@ -207,59 +207,53 @@ export const Dashboard = ({ onNavigate }: { onNavigate: (tab: string) => void })
               </div>
               <div className="progress-bg h-1.5">
                 <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${goal.progress}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="progress-fill" 
-                />
-              </div>
-            </div>
-          ))}
-          {goals.length === 0 && <div className="text-gray-300 text-xs italic">No goals defined.</div>}
-        </div>
-        <div className="mt-auto pt-4 text-[9px] text-gray-400 font-bold uppercase tracking-widest">
-          {goalData.length > 0 ? "Track progress vs target amount" : "Define your first goal to track progress"}
-        </div>
-      </div>
-
-      {/* Asset Allocation */}
-      <div className="bento-card col-span-1 md:row-span-2">
-        <span className="pill mb-4 w-fit">Asset Allocation</span>
-        <div className="flex-1 flex flex-col justify-center space-y-4">
-          {portfolioWithMetrics.slice(0, 4).map((fund, idx) => (
-            <div key={fund.id} className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></div>
-              <div className="flex-1">
-                <div className="flex justify-between text-[10px] font-bold uppercase tracking-tight mb-1">
-                  <span className="truncate max-w-[80px]">{fund.name}</span>
-                  <span>{((fund.current / totalValue) * 100).toFixed(0)}%</span>
-                </div>
-                <div className="h-1 bg-gray-100 rounded-full">
-                  <div className="h-full" style={{ width: `${(fund.current / totalValue) * 100}%`, backgroundColor: COLORS[idx % COLORS.length] }}></div>
-                </div>
-              </div>
-            </div>
-          ))}
-          {funds.length === 0 && <div className="text-gray-300 text-xs italic">No assets found.</div>}
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="bento-card col-span-1 md:row-span-3">
-        <span className="pill mb-4 w-fit">Recent Log</span>
-        <div className="space-y-4 overflow-y-auto max-h-[300px]">
-          {transactions.slice(0, 5).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(tx => (
-            <div key={tx.id} className="border-l-2 border-gray-100 pl-3 py-1">
-              <div className="text-[11px] font-bold">₹{tx.amount.toLocaleString()} Invested</div>
-              <div className="text-[9px] text-gray-500 font-medium">into {funds.find(f => f.id === tx.fundId)?.name}</div>
-              <div className="text-[8px] text-gray-400 font-mono mt-0.5">{new Date(tx.date).toLocaleDateString()}</div>
-            </div>
-          ))}
-          {transactions.length === 0 && <div className="text-gray-300 text-xs italic">No recent activity.</div>}
-        </div>
-      </div>
-
-      {/* Footer Metrics */}
+                   initial={{ width: 0 }}
+                   animate={{ width: `${goal.progress}%` }}
+                   transition={{ duration: 0.8, ease: "easeOut" }}
+                   className="progress-fill" 
+                 />
+               </div>
+             </div>
+           ))}
+           {goals.length === 0 && <div className="text-gray-300 text-xs italic text-center">No goals defined.</div>}
+         </div>
+         <div className="mt-auto pt-4 text-[9px] text-gray-400 font-bold uppercase tracking-widest">
+           {goalData.length > 0 ? "Track progress vs target amount" : "Define your first goal to track progress"}
+         </div>
+       </div>
+ 
+       {/* Asset Allocation */}
+       <div className="bento-card col-span-1 md:col-span-2 md:row-span-2">
+         <span className="pill mb-4 w-fit">Asset Allocation</span>
+         <div className="flex-1 flex flex-col justify-center space-y-6">
+           {portfolioWithMetrics.slice(0, 4).map((fund, idx) => (
+             <div key={fund.id} className="flex items-center gap-4">
+               <div className="w-4 h-4 rounded-md" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></div>
+               <div className="flex-1">
+                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
+                   <span className="truncate">{fund.name}</span>
+                   <span className="text-black">{((fund.current / totalValue) * 100).toFixed(0)}%</span>
+                 </div>
+                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                   <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(fund.current / totalValue) * 100}%` }}
+                    className="h-full" 
+                    style={{ backgroundColor: COLORS[idx % COLORS.length] }} 
+                   />
+                 </div>
+               </div>
+               <div className="text-right min-w-[80px]">
+                 <div className="text-[11px] font-bold">₹{fund.current.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                 <div className="text-[10px] text-accent-green font-bold">+{fund.percGain.toFixed(1)}%</div>
+               </div>
+             </div>
+           ))}
+           {funds.length === 0 && <div className="text-gray-300 text-xs italic text-center">No assets found.</div>}
+         </div>
+       </div>
+ 
+       {/* Footer Metrics */}
       <div className="bento-card col-span-1 md:col-span-3 md:row-span-1">
           <div className="flex flex-col md:flex-row justify-between items-center h-full text-sm font-medium px-4 gap-6 md:gap-0 py-4 md:py-0">
           <div className="text-left w-full">

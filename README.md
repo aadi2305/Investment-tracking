@@ -1,20 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Vault.ai - Modern Financial Portfolio Tracker
 
-# Run and deploy your AI Studio app
+Vault.ai is a privacy-first, beautiful financial dashboard for tracking mutual funds, goals, and capital allocations.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/8aa9cbb4-c6bc-4271-bae4-fe682de7fdb4
+- **Real-time NAV Tracking**: Automatically fetches latest prices for Indian Mutual Funds.
+- **Portoflio Metrics**: Track absolute gains, XIRR (simulated), and asset allocation.
+- **Goal Management**: Define financial goals and track your progress through automated projections.
+- **Bento Grid Interface**: A highly responsive, clean UI inspired by modern design trends.
+- **Secure**: Authentication and data storage powered by Firebase.
 
-## Run Locally
+## Deployment to GitHub Pages
 
-**Prerequisites:**  Node.js
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+2. **Deploy the `dist` folder**:
+   - You can use the `gh-pages` package or set up a GitHub Action to deploy the `dist/` folder.
+   - Note: We have set `base: './'` in `vite.config.ts`, so it will work correctly on `username.github.io/repo-name/`.
 
+## Configuration
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+If you want to host your own instance, copy `.env.example` to `.env` and fill in your Firebase credentials:
+
+```env
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project
+...
+```
+
+## Security Rules
+
+Ensure you deploy the included `firestore.rules` to your Firebase project to keep your data secure.
+
+---
+
+Built with React 19, Vite, Tailwind CSS 4, and Framer Motion.
