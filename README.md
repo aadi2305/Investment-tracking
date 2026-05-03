@@ -42,7 +42,18 @@ npm run deploy
 
 ## 🛠 Features & Setup
 
-If you want to host your own instance, copy `.env.example` to `.env` and fill in your Firebase credentials. For GitHub deployments, you can add these variables to **Settings > Secrets and variables > Actions > Variables** using the `VITE_` prefix.
+If you want to host your own instance, copy `.env.example` to `.env` and fill in your Firebase credentials. 
+
+### How to get your Firebase Credentials:
+1. Open [Firebase Console](https://console.firebase.google.com/).
+2. Click **Project Settings** (Gear icon ⚙️).
+3. Scroll down to **Your apps** > **Web apps**.
+4. Select **Config** to see the values for `apiKey`, `authDomain`, etc.
+
+### For GitHub Deployments:
+You should add these as **Variables** (not Secrets, since they are public anyway in the build) in your GitHub Repository:
+1. Go to **Settings > Secrets and variables > Actions > Variables**.
+2. Add each variable starting with `VITE_` (e.g., `VITE_FIREBASE_API_KEY`).
 
 ```env
 VITE_FIREBASE_API_KEY=your_key
